@@ -45,3 +45,9 @@ public class RESTCall implements Callback<JsonNode> {
     http.sendDataOverRest(temp);
   }
 }
+
+// Command to run the code:
+// javac -classpath "/path/to/unirest.jar" RESTCall.java
+// sudo java -classpath ".:/path/to/unirest.jar" RESTCall
+// Note: Replace "/path/to/unirest.jar" with the actual path to the Unirest
+// library.
