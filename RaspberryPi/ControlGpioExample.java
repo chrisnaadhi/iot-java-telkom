@@ -6,43 +6,44 @@ public class ControlGpioExample {
 
     public static void main(String[] args) throws InterruptedException {
 
-        System.out.println("<--Pi4J v3--> GPIO Control Example ... started.");
+        System.out.println("<--Pi4J v2--> GPIO Control Example ... started.");
 
-        // Initialize Pi4J with an auto context
+        // Create Pi4J context (auto detect platform)
         Context pi4j = Pi4J.newAutoContext();
 
-        // Configure digital output on GPIO 18 (BCM numbering)
-        DigitalOutputConfig config = DigitalOutput.newConfigBuilder(pi4j)
+        // Create Digital Output configuration for BCM GPIO 18
+        DigitalOutputConfig outputConfig = DigitalOutput.newConfigBuilder(pi4j)
                 .id("my-led")
-                .name("MyLED")
-                .address(18) // BCM GPIO pin number (GPIO18 = physical pin 12)
+                .name("My LED")
+                .address(18) // BCM pin 18
                 .shutdown(DigitalState.LOW)
                 .initial(DigitalState.HIGH)
-                .provider("pigpio-digital-output") // or "linuxfs-digital-output" if pigpio not available
                 .build();
 
-        DigitalOutput pin = pi4j.create(config);
+        // Create Digital Output instance
+        DigitalOutput led = pi4j.create(outputConfig);
 
-        System.out.println("--> GPIO state should be: ON");
+        System.out.println("LED ON");
         Thread.sleep(5000);
 
-        pin.low();
-        System.out.println("--> GPIO state should be: OFF");
+        led.low();
+        System.out.println("LED OFF");
         Thread.sleep(5000);
 
-        pin.toggle();
-        System.out.println("--> GPIO state should be: ON");
+        led.toggle();
+        System.out.println("LED TOGGLED ON");
         Thread.sleep(5000);
 
-        pin.toggle();
-        System.out.println("--> GPIO state should be: OFF");
+        led.toggle();
+        System.out.println("LED TOGGLED OFF");
         Thread.sleep(5000);
 
-        System.out.println("--> GPIO state should be: ON for only 1 second");
-        pin.pulse(1000); // pulse for 1000ms
+        System.out.println("LED PULSE ON for 1 second");
+        led.pulse(1000);
 
-        // Clean shutdown
+        // Shutdown Pi4J
         pi4j.shutdown();
+
         System.out.println("Exiting ControlGpioExample");
     }
 }
