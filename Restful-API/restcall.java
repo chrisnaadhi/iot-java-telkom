@@ -10,7 +10,7 @@ public class RESTCall {
     Unirest.post("https://api.thingspeak.com/update.json")
         .header("accept", "application/json")
         .field("api_key", "XXXXXX") // Replace with your API key
-        .field("field1", temp)
+        .field("field1", String.valueOf(temp))
         .asJsonAsync(new Callback<JsonNode>() {
           @Override
           public void cancelled() {
