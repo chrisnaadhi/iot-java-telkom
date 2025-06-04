@@ -1,11 +1,12 @@
-// START SNIPPET: control-gpio-snippet
+// START SNIPPET: cylon-gpio-snippet
+
 
 /*
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
  * PROJECT       :  Pi4J :: Java Examples
- * FILENAME      :  ControlGpioExample.java
+ * FILENAME      :  CylonGpioExample.java
  *
  * This file is part of the Pi4J project. More information about
  * this project can be found here:  http://www.pi4j.com/
@@ -29,6 +30,7 @@
  * #L%
  */
 
+
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
@@ -36,57 +38,52 @@ import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 
 /**
- * This example code demonstrates how to perform simple state
- * control of a GPIO pin on the Raspberry Pi.
+ * This example code demonstrates how to perform a blinking cycle
+ * (cylon effect) of a series of GPIO pins on the Raspberry Pi.
  *
  * @author Robert Savage
  */
-public class ControlGpioExample {
+public class CylonGpioExample {
 
     public static void main(String[] args) throws InterruptedException {
 
-        System.out.println("<--Pi4J--> GPIO Control Example ... started.");
+        System.out.println("<--Pi4J--> GPIO Cylon Example ... started.");
 
         // create gpio controller
         final GpioController gpio = GpioFactory.getInstance();
 
         // provision gpio pin #01 as an output pin and turn on
-        final GpioPinDigitalOutput pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, "MyLED", PinState.HIGH);
-
-        // set shutdown state for this pin
-        pin.setShutdownOptions(true, PinState.LOW);
-
+        final GpioPinDigitalOutput[] pins = {
+                gpio.provisionDigitalOutputPin(RaspiPin.GPIO_00, PinState.LOW),
+                gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, PinState.LOW),
+                gpio.provisionDigitalOutputPin(RaspiPin.GPIO_02, PinState.LOW),
+                gpio.provisionDigitalOutputPin(RaspiPin.GPIO_03, PinState.LOW),
+                gpio.provisionDigitalOutputPin(RaspiPin.GPIO_04, PinState.LOW),
+                gpio.provisionDigitalOutputPin(RaspiPin.GPIO_05, PinState.LOW),
+                gpio.provisionDigitalOutputPin(RaspiPin.GPIO_06, PinState.LOW),
+                gpio.provisionDigitalOutputPin(RaspiPin.GPIO_07, PinState.LOW)};
         System.out.println("--> GPIO state should be: ON");
 
-        Thread.sleep(5000);
+        // set shutdown options on all pins
+        gpio.setShutdownOptions(true, PinState.LOW, pins);
 
-        // turn off gpio pin #01
-        pin.low();
-        System.out.println("--> GPIO state should be: OFF");
+        // infinite loop
+        while(true) {
 
-        Thread.sleep(5000);
+            for(int index = 0; index <= 6; index++) {
+                pins[index].pulse(50);
+                Thread.sleep(50);
+            }
 
-        // toggle the current state of gpio pin #01 (should turn on)
-        pin.toggle();
-        System.out.println("--> GPIO state should be: ON");
-
-        Thread.sleep(5000);
-
-        // toggle the current state of gpio pin #01  (should turn off)
-        pin.toggle();
-        System.out.println("--> GPIO state should be: OFF");
-
-        Thread.sleep(5000);
-
-        // turn on gpio pin #01 for 1 second and then off
-        System.out.println("--> GPIO state should be: ON for only 1 second");
-        pin.pulse(1000, true); // set second argument to 'true' use a blocking call
+            for(int index = 6; index >= 0; index--) {
+                pins[index].pulse(50);
+                Thread.sleep(50);
+            }
+        }
 
         // stop all GPIO activity/threads by shutting down the GPIO controller
         // (this method will forcefully shutdown all GPIO monitoring threads and scheduled tasks)
-        gpio.shutdown();
-
-        System.out.println("Exiting ControlGpioExample");
+        // gpio.shutdown();   <--- implement this method call if you wish to terminate the Pi4J GPIO controller
     }
 }
-//END SNIPPET: control-gpio-snippet
+//END SNIPPET: cylon-gpio-snippet
