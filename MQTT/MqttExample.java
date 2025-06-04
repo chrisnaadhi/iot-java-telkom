@@ -6,7 +6,7 @@ public class MqttExample {
     String content = "T=30C and RH=40%";
     int qos = 2;
     String broker = "tcp://192.168.1.17:1883";
-    String clientId = "JavaMQTTKelompok5_" + System.currentTimeMillis();
+    String clientId = "JavaMQTTKelompok5";
     MemoryPersistence persistence = new MemoryPersistence();
 
     try {
