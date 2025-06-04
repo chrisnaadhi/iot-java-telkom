@@ -1,3 +1,5 @@
+// START SNIPPET: control-gpio-snippet
+
 /*
  * #%L
  * **********************************************************************
@@ -6,22 +8,24 @@
  * FILENAME      :  ControlGpioExample.java
  *
  * This file is part of the Pi4J project. More information about
- * this project can be found here:  https://pi4j.com/
+ * this project can be found here:  http://www.pi4j.com/
  * **********************************************************************
  * %%
- * Copyright (C) 2012 - 2021 Pi4J
+ * Copyright (C) 2012 - 2019 Pi4J
  * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
 
@@ -68,7 +72,7 @@ public class ControlGpioExample {
 
         Thread.sleep(5000);
 
-        // toggle the current state of gpio pin #01 (should turn off)
+        // toggle the current state of gpio pin #01  (should turn off)
         pin.toggle();
         System.out.println("--> GPIO state should be: OFF");
 
@@ -76,13 +80,13 @@ public class ControlGpioExample {
 
         // turn on gpio pin #01 for 1 second and then off
         System.out.println("--> GPIO state should be: ON for only 1 second");
-        pin.pulseSync(1000);
+        pin.pulse(1000, true); // set second argument to 'true' use a blocking call
 
         // stop all GPIO activity/threads by shutting down the GPIO controller
-        // (this method will forcefully shutdown all GPIO monitoring threads and
-        // scheduled tasks)
+        // (this method will forcefully shutdown all GPIO monitoring threads and scheduled tasks)
         gpio.shutdown();
 
         System.out.println("Exiting ControlGpioExample");
     }
 }
+//END SNIPPET: control-gpio-snippet
