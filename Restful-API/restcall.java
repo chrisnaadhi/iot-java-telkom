@@ -1,6 +1,4 @@
 import java.io.InputStream;
-import java.net.http.HttpResponse;
-
 import com.mashape.unirest.http.*;
 import com.mashape.unirest.http.async.Callback;
 import com.mashape.unirest.http.exceptions.UnirestException;

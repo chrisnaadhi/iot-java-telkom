@@ -5,20 +5,32 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
 public class MqttExample {
-  public static void main(Stringp[] args) {
+  public static void main(String[] args) {
     String topic = "PX Temperature and Humidity";
     String content = "T=30C and RH=40%";
-    int qoe = 2;       
+    int qos = 2;
     String broker = "tcp://broker.hivemq.com:1883";
     String clientId = "JavaMQTTExample";
 
     MemoryPersistence persistence = new MemoryPersistence();
 
     try {
-      MMqTTClient sampleClient = new MqttClient(broker, clientId, persistence);
-      MqttConnectOptions connOpts = new MqttConnectOptions;
-      connOpts.setCleanSession(true)
+      MqttClient sampleClient = new MqttClient(broker, clientId, persistence);
+      MqttConnectOptions connOpts = new MqttConnectOptions();
+      connOpts.setCleanSession(true);
       System.out.println("Connecting to broker: " + broker);
+      sampleClient.connect(connOpts);
+      System.out.println("Connected");
+      System.out.println("Publishing message: " + content);
+      MqttMessage message = new MqttMessage(content.getBytes());
+      message.setQos(qos);
+      sampleClient.publish(topic, message);
+      System.out.println("Message published");
+      sampleClient.disconnect();
+      System.out.println("Disconnected");
+      System.exit(0);
+    } catch (MqttException me) {
+      me.printStackTrace();
     }
   }
 }
