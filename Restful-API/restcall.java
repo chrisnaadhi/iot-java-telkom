@@ -35,17 +35,10 @@ public class RESTCall implements Callback<JsonNode> {
     arg0.printStackTrace();
   }
 
-  public statuc void main(String[] args) throws InterruptedException {
+  public static void main(String[] args) throws InterruptedException {
     RESTCall http = new RestCall();
-
 
     double temp = 30.0;
     http.sendDataOverRest(temp);
   }
 }
-
-// Command to run the code:
-// javac -classpath "/path/to/unirest.jar" RESTCall.java
-// sudo java -classpath ".:/path/to/unirest.jar" RESTCall
-// Note: Replace "/path/to/unirest.jar" with the actual path to the Unirest
-// library.
