@@ -6,24 +6,33 @@ public class ControlGpioExample {
     public static void main(String[] args) throws Exception {
         Context pi4j = Pi4J.newAutoContext();
 
-        var config = DigitalOutput.newConfigBuilder(pi4j)
-                .id("led")
-                .name("LED Blinker")
-                .address(17) // GPIO 17 (pin 11)
-                .shutdown(DigitalState.LOW)
-                .initial(DigitalState.LOW)
-                .build();
+        // Define multiple GPIO pins (e.g., 17, 27, 22)
+        int[] gpioPins = { 17, 27, 22 };
 
-        var output = pi4j.create(config);
+        // Create DigitalOutput instances for each pin
+        DigitalOutput[] outputs = new DigitalOutput[gpioPins.length];
 
-        System.out.println("Blinking LED on GPIO 17...");
-
-        for (int i = 0; i < 10; i++) {
-            output.toggle();
-            Thread.sleep(500);
+        for (int i = 0; i < gpioPins.length; i++) {
+            var config = DigitalOutput.newConfigBuilder(pi4j)
+                    .id("pin" + gpioPins[i])
+                    .name("GPIO " + gpioPins[i])
+                    .address(gpioPins[i])
+                    .shutdown(DigitalState.LOW)
+                    .initial(DigitalState.LOW)
+                    .build();
+            outputs[i] = pi4j.create(config);
         }
 
-        output.low();
+        // Blink each pin ON for 1 second sequentially
+        for (int i = 0; i < outputs.length; i++) {
+            System.out.println("Turning ON GPIO " + gpioPins[i]);
+            outputs[i].high();
+            Thread.sleep(1000);
+            outputs[i].low();
+            System.out.println("Turning OFF GPIO " + gpioPins[i]);
+        }
+
         pi4j.shutdown();
+        System.out.println("Done.");
     }
 }
