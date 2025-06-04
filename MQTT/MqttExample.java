@@ -9,8 +9,8 @@ public class MqttExample {
     String topic = "PX Temperature and Humidity";
     String content = "T=30C and RH=40%";
     int qos = 2;
-    String broker = "tcp://broker.hivemq.com:1883";
-    String clientId = "JavaMQTTExample";
+    String broker = "tcp://iot.eclipse.org:1883";
+    String clientId = "JavaMQTTKelompok5";
 
     MemoryPersistence persistence = new MemoryPersistence();
 
