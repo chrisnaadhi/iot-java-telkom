@@ -4,13 +4,19 @@ import kong.unirest.Unirest;
 import kong.unirest.Callback;
 import kong.unirest.UnirestException;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class RESTCall {
 
   public void sendDataOverRest(double temp) {
     Unirest.post("https://api.thingspeak.com/update.json")
         .header("accept", "application/json")
-        .field("api_key", "XXXXXX") // Replace with your API key
-        .field("field1", String.valueOf(temp))
+        .field("api_key", "PC46E8S7BT7ENFQ5") // Replace with your API key
+        .field("field1", String.format("%.2f", temp))
         .asJsonAsync(new Callback<JsonNode>() {
           @Override
           public void cancelled() {
@@ -34,16 +40,31 @@ public class RESTCall {
         });
   }
 
-  public static void main(String[] args) throws InterruptedException {
+  public static void main(String[] args) {
     RESTCall http = new RESTCall();
+    ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    AtomicInteger count = new AtomicInteger(0);
+    int maxRuns = 30;
 
-    double temp = 30.0;
-    http.sendDataOverRest(temp);
+    ScheduledFuture<?> scheduledTask = scheduler.scheduleAtFixedRate(() -> {
+      int current = count.incrementAndGet();
 
-    // Wait to allow async call to complete before exiting
-    Thread.sleep(3000);
+      // Generate a random temperature between 20.0 and 40.0
+      double temp = 20.0 + (Math.random() * 20.0);
+      System.out.printf("Sending reading #%d: %.2f°C%n", current, temp);
 
-    // Properly shutdown Unirest
-    Unirest.shutDown();
+      http.sendDataOverRest(temp);
+
+      if (current >= maxRuns) {
+        System.out.println("Reached max runs. Shutting down scheduler...");
+        scheduler.shutdown();
+
+        try {
+          Unirest.shutDown();
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
+    }, 0, 10, TimeUnit.SECONDS);
   }
 }
